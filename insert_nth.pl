@@ -1,27 +1,18 @@
-% Read a number from the user
-read_number(N) :-
-    write('Enter a number: '),
-    read(N).
+:- initialization(main). % Call main predicate on program start
 
-% Read a list from the user
-read_list(L) :-
-    write('Enter a list: '),
-    read(L).
+main :- 
+    write('Enter a list of elements: '), % Prompt for input
+    read(L), % Read the list from user input
+    write('Enter the item to be inserted: '), % Prompt for I
+    read(I), % Read I from user input
+    write('Enter the desired position (N): '), % Prompt for N
+    read(N), % Read N from user input
+    insert_nth(I, N, L, R), % Call insert_nth predicate to insert I into the nth position of L
+    write('The list after inserting '), write(I), write(' at position '), write(N), write(' is: '), write(R), nl, % Display the result
+    halt. % Terminate the program
 
-% Insert an item into the Nth position of a list to generate a new list
-insert_nth(I, N, L, R) :-
-    length(L, Len),
-    (   N =< 0 -> R = [I | L]
-    ;   N >= Len -> R = L ++ [I]
-    ;   length(Front, N),
-        append(Front, [X|Back], L),
-        append(Front, [I, X|Back], R)
-    ).
-
-% Main predicate to read the inputs and perform the insertion
-main :-
-    read_number(I),
-    read_number(N),
-    read_list(L),
-    insert_nth(I, N, L, R),
-    write('The list '), write(L), write(' with '), write(I), write(' inserted at position '), write(N), write(' is: '), write(R).
+insert_nth(I, 1, L, [I | L]). % Base case: insert I as the head of the list when N=1
+insert_nth(I, N, [X | L], [X | R]) :-
+    N > 1, % Ensure N is a positive integer
+    N1 is N - 1, % Decrement N by 1
+    insert_nth(I, N1, L, R). % Recursive rule: insert I into the (N-1)th position of the tail of the list

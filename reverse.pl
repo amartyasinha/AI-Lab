@@ -1,11 +1,8 @@
-reverse([], []) :-
-    !.
-reverse([H|T], R) :-
-    reverse(T, TR),
-    append(TR, [H], R).
+:- initialization(main). % Call main predicate on program start
 
-reverse(L, R) :-
-    write('Enter the list: '),
-    read(L),
-    reverse(L, R),
-    write('The reversed list of '), write(L), write(' is '), write(R).
+main :-
+    write('Enter a list: '), % Prompt for input
+    read(L), % Read list from user input
+    reverse(L, R), % Call reverse predicate to reverse the list L
+    write('Reversed list: '), write(R), nl, % Display the result
+    halt. % Terminate the program

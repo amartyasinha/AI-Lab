@@ -1,22 +1,19 @@
-% Base case: merging an empty list with another list produces the other list
-merge([], L2, L2).
+:- initialization(main). % Call main predicate on program start
 
-% Case 1: L1's head is less than or equal to L2's head, so it goes first in L3
-merge([H1|T1], [H2|T2], [H1|T3]) :-
-    H1 =< H2,
-    merge(T1, [H2|T2], T3).
+main :- 
+    write('Enter the first ordered list: '), % Prompt for input
+    read(L1), % Read the first ordered list from user input
+    write('Enter the second ordered list: '), % Prompt for input
+    read(L2), % Read the second ordered list from user input
+    merge(L1, L2, L3), % Call merge predicate to merge L1 and L2
+    write('The merged list is: '), write(L3), nl, % Display the result
+    halt. % Terminate the program
 
-% Case 2: L2's head is less than L1's head, so it goes first in L3
-merge([H1|T1], [H2|T2], [H2|T3]) :-
-    H1 > H2,
-    merge([H1|T1], T2, T3).
-
-% Main predicate to read the inputs and perform the merge
-main :-
-    write('Enter the first ordered list: '),
-    read(L1),
-    write('Enter the second ordered list: '),
-    read(L2),
-    merge(L1, L2, L3),
-    write('The merged list is: '),
-    write(L3).
+merge([], L, L). % Base case: if L1 is empty, merged list is L2
+merge(L, [], L). % Base case: if L2 is empty, merged list is L1
+merge([X | L1], [Y | L2], [X | L3]) :-
+    X =< Y, % Compare the heads of L1 and L2
+    merge(L1, [Y | L2], L3). % Recursive rule: if X <= Y, merge the tails of L1 and L2
+merge([X | L1], [Y | L2], [Y | L3]) :-
+    X > Y, % Compare the heads of L1 and L2
+    merge([X | L1], L2, L3). % Recursive rule: if X > Y, merge the tails of L1 and L2
